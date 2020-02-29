@@ -37,20 +37,20 @@ int main(){
    if (buf[0x08]>0x7f){A1M2=true;}else{A1M2=false;} //states of the Alarm registers and assign the 
    if (buf[0x09]>0x7f){A1M3=true;}else{A1M3=false;} //different bits to alarm bits that corrospond to
    if (buf[0x0A]>0x7f){A1M4=true;}else{A1M4=false;} //alarm identifiers on the data sheet. If the data in the buffer 
-   if (buf[0x0B]>0x7f){A2M1=true;}else{A2M1=false;} //is greater than 128, bit 8 must be high.
-   if (buf[0x0C]>0x7f){A2M2=true;}else{A2M2=false;}
-   if (buf[0x0D]>0xf7){A2M3=true;}else{A2M3=false;}
-   bufAShift = buf[0x0A]<<1;
-   bufDShift = buf[0x0D]<<1;
+   if (buf[0x0B]>0x7f){A2M1=true;}else{A2M1=false;} //is greater than or equal to 128, bit 8 must be high.
+   if (buf[0x0C]>0x7f){A2M2=true;}else{A2M2=false;} //these are the registers to say how often the alarm 
+   if (buf[0x0D]>0xf7){A2M3=true;}else{A2M3=false;} //goes off
+   bufAShift = buf[0x0A]<<1; //check the DY of alarm 1
+   bufDShift = buf[0x0D]<<1; //check the DY of alarm 2
    if (bufAShift>0x7f){A1DOW=true;}else{A1DOW=false;} //Shift the register 1 bit to the left and if the data is greater
    if (bufDShift>0x7f){A2DOW=true;}else{A2DOW=false;} //than 128, bit 7 must be high. DOW false means its date of month
-   A1secs=bcdToDec(buf[0x07] & 0x0F);
-   A1mins=bcdToDec(buf[0x08] & 0x0F);
-   A1hours=bcdToDec(buf[0x09] & 0x0F);
-   A1day=bcdToDec(buf[0x0A] & 0x0F);
-   A2mins=bcdToDec(buf[0x0B] & 0x0F);
-   A2hours=bcdToDec(buf[0x0C] & 0x0F);
-   A2day=bcdToDec(buf[0x0D] & 0x0F);
+   A1secs=bcdToDec(buf[0x07] & 0x7F); //read in data from register 07 for seconds and and with 7F to get the for all secs
+   A1mins=bcdToDec(buf[0x08] & 0x7F); //read in data from register 07 for seconds and and with 7F to get the for all mins
+   A1hours=bcdToDec(buf[0x09] & 0x1F);//read in data from register 07 for seconds and and with 1F to get the for all hours
+   A1day=bcdToDec(buf[0x0A] & 0x3F); //read in data from register 07 for seconds and and with 3F to get the for all days
+   A2mins=bcdToDec(buf[0x0B] & 0x7F); //read in data from register 07 for seconds and and with 7F to get the for all mins
+   A2hours=bcdToDec(buf[0x0C] & 0x1F);//read in data from register 07 for seconds and and with 7F to get the for all hours
+   A2day=bcdToDec(buf[0x0D] & 0x3F); //read in data from register 07 for seconds and and with 7F to get the for all days
    
    if (A1DOW){              //2 if statements to output if alarm1 is set to day of week or month
    printf("The current alarm 1 is set for %02d second of %02d min of %02d hour of the %02d day of the week.\n",A1secs,

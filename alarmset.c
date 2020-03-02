@@ -33,52 +33,62 @@ int main(){
       return 1;
    }
    
- 
+
+   //buf[19] = 0x00;
+   //buf[0] = buf[0];
+   buf[1] = buf[1];
+   buf[2] = buf[2];
+   buf[3] = buf[3];
+   buf[4] = buf[4];
+   buf[5] = buf[5];
+   buf[6] = buf[6];
+   buf[7] = buf[7];
+   
    //seconds set
-   buf[7] = 0x00; //start with clear register
+   buf[8] = 0x00; 
    //bitwise or |
    int seconda = 33; //set alarm seconds
    int asec = seconda/10; //seconds div 10 for bit 4 to 6
    int bsec = seconda%10; //seconds remainder for bit 0 to 3
-   buf[7] = buf[7] | DecTobcd(asec); //set bit 4 to 6 at 0 to 3
-   buf[7] = (buf[7]<<4) | DecTobcd(bsec); //shift left 4 bits and set the bsec 0 to 3 bits
+   buf[8] = buf[8] | DecTobcd(asec); //set bit 4 to 6 at 0 to 3
+   buf[8] = (buf[8]<<4) | DecTobcd(bsec); //shift left 4 bits and set the bsec 0 to 3 bits
    
    //minutes set
-   buf[8] = 0x00;
+   buf[9] = 0x00;
    int mina = 55; //set alarm seconds
-   buf[8] = buf[8] | DecTobcd(mina/10); //set bit 4 to 6 at 0 to 3
-   buf[8] = (buf[8]<<4) | DecTobcd(mina%10); //shift left 4 bits and set the bsec 0 to 3 bits
+   buf[9] = buf[9] | DecTobcd(mina/10); //set bit 4 to 6 at 0 to 3
+   buf[9] = (buf[9]<<4) | DecTobcd(mina%10); //shift left 4 bits and set the bsec 0 to 3 bits
     
    //hour set
-   buf[9] = 0x00;
+   buf[10] = 0x00;
    int houra = 12;
-   buf[9] = buf[9] |DecTobcd(houra/10); //done without using variable
-   buf[9] = buf[9]<<4 | DecTobcd(houra%10);
+   buf[10] = buf[10] |DecTobcd(houra/10); //done without using variable
+   buf[10] = buf[10]<<4 | DecTobcd(houra%10);
 
    //day set
-   buf[10] = 0x00;
+   buf[11] = 0x00;
    int daya = 15;
-   buf[10] = buf[10] | DecTobcd(daya/10);
-   buf[10] = buf[10]<<4 | DecTobcd(daya%10);
+   buf[11] = buf[11] | DecTobcd(daya/10);
+   buf[11] = buf[11]<<4 | DecTobcd(daya%10);
 
    //minutes set alarm 2
-   buf[11] = 0x00;
-   int minb = 9;
-   buf[11] = buf[11] | DecTobcd(minb/10);
-   buf[11] = buf[11]<<4 | DecTobcd(minb%10);
-
    buf[12] = 0x00;
-   int hourb = 15;
-   buf[12] = buf[12] | DecTobcd(hourb/10);
-   buf[12] = buf[12]<<4 | DecTobcd(hourb%10);
+   int minb = 9;
+   buf[12] = buf[12] | DecTobcd(minb/10);
+   buf[12] = buf[12]<<4 | DecTobcd(minb%10);
 
    buf[13] = 0x00;
+   int hourb = 15;
+   buf[13] = buf[13] | DecTobcd(hourb/10);
+   buf[13] = buf[13]<<4 | DecTobcd(hourb%10);
+
+   buf[14] = 0x00;
    int dayb = 23;
-   buf[13] = buf[13] | DecTobcd(dayb/10);
-   buf[13] = buf[13]<<4 | DecTobcd(dayb%10);
+   buf[14] = buf[14] | DecTobcd(dayb/10);
+   buf[14] = buf[14]<<4 | DecTobcd(dayb%10);
 
    if(write(file, buf, BUFFER_SIZE)!=1){
-      perror("Writing date and time\n");
+      perror("Failed to Set Alarm time\n");
       return 1;
    }
    close(file);

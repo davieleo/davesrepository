@@ -35,8 +35,8 @@ int main(){
    
  
    buf[0] = DecTobcd(1);
-   buf[1] = DecTobcd(7); //set the mins to 7
-   buf[2] = DecTobcd(19); //set the hours 19
+   buf[1] = DecTobcd(49); //set the mins to 7
+   buf[2] = DecTobcd(17); //set the hours 19
    buf[3] = DecTobcd(7); //setting it to saturday
    buf[4] = DecTobcd(29); //setting the date to 29th
    buf[5] = DecTobcd(2); //setting the month to Feb

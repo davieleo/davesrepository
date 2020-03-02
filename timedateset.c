@@ -42,7 +42,7 @@ int main(){
    buf[5] = DecTobcd(2); //setting the month to Feb
    buf[6] = DecTobcd(20); //setting the year to 2020
 
-   if(write(file, buf, BUFFER_SIZE)!=1){
+   if(write(file, buf, BUFFER_SIZE)!=-1){
       perror("Writing date and time\n");
       printf("The Time is set to %d:%d:%d\n", bcdToDec(buf[2]), bcdToDec(buf[1]), bcdToDec(buf[0]));
       printf("The Date is set to %d:%d:%d\n", bcdToDec(buf[4]), bcdToDec(buf[5]), bcdToDec(buf[6]));

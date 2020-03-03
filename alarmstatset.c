@@ -33,21 +33,17 @@ int main(){
       return 1;
    }
    
- 
    buf[0] = DecTobcd(1);
-   buf[1] = DecTobcd(2);
-   buf[2] = DecTobcd(3);
-   buf[3] = DecTobcd(1);
-   buf[4] = DecTobcd(2);
-   buf[5] = DecTobcd(3);
-   buf[6] = DecTobcd(1);
-   buf[7] = DecTobcd(2);
+   
+   int secs = 45;
+   buf[7] = DecTobcd(secs/10);
+   buf[7] = buf[7]<<4|DecTobcd(secs%10);
    buf[8] = DecTobcd(3);
    buf[9] = DecTobcd(1);
    buf[10] = DecTobcd(2);
    buf[11] = DecTobcd(3);
 
-   if(write(file, buf, BUFFER_SIZE)!=-1){
+   if(write(file, buf, BUFFER_SIZE)!=1){
       perror("Writing date and time\n");
       return 1;
    }

@@ -8,7 +8,7 @@
 // the time is in the registers in encoded decimal form
 int bcdToDec(char b) { return (b/16)*10 + (b%16); }
 int A1secs, A1mins, A1hours, A1day, A2mins, A2hours, A2day;
-bool A1M1,A1M2,A1M3,A1M4,A2M1,A2M2,A2M3,A1DOW,A2DOW;
+bool A1M1,A1M2,A1M3,A1M4,A2M2,A2M3,A2M4,A1DOW,A2DOW;
 char bufAShift,bufDShift;
 
 
@@ -37,9 +37,9 @@ int main(){
    if (buf[0x08]>0x7f){A1M2=true;}else{A1M2=false;} //states of the Alarm registers and assign the 
    if (buf[0x09]>0x7f){A1M3=true;}else{A1M3=false;} //different bits to alarm bits that corrospond to
    if (buf[0x0A]>0x7f){A1M4=true;}else{A1M4=false;} //alarm identifiers on the data sheet. If the data in the buffer 
-   if (buf[0x0B]>0x7f){A2M1=true;}else{A2M1=false;} //is greater than or equal to 128, bit 8 must be high.
-   if (buf[0x0C]>0x7f){A2M2=true;}else{A2M2=false;} //these are the registers to say how often the alarm 
-   if (buf[0x0D]>0xf7){A2M3=true;}else{A2M3=false;} //goes off
+   if (buf[0x0B]>0x7f){A2M2=true;}else{A2M2=false;} //is greater than or equal to 128, bit 8 must be high.
+   if (buf[0x0C]>0x7f){A2M3=true;}else{A2M3=false;} //these are the registers to say how often the alarm 
+   if (buf[0x0D]>0x7f){A2M4=true;}else{A2M4=false;} //goes off
    bufAShift = buf[0x0A]<<1; //check the DY of alarm 1
    bufDShift = buf[0x0D]<<1; //check the DY of alarm 2
    if (bufAShift>0x7f){A1DOW=true;}else{A1DOW=false;} //Shift the register 1 bit to the left and if the data is greater
@@ -97,19 +97,19 @@ int main(){
    }
 
    //The next set of if statements are to state how often the alarm 2 goes off. Alarm mode is in the data sheet for DS3231
-   if (A2M1 && A2M2 && A2M3){
-   printf("Alarm 2 will go off once per minute until it is cleared.\n");
+   if (A2M2 && A2M3 && A2M4){
+   printf("Alarm 2 will go off once per minute when seconds are 00 until it is cleared.\n");
    }
-   else if (!A2M1 && A2M2 && A2M3){
-   printf("Alarm 2 will go off once per hour until it is cleared.\n");
+   else if (!A2M2 && A2M3 && A2M4){
+   printf("Alarm 2 will go off once per hour when minutes match until it is cleared.\n");
    }
-   else if (!A2M1 && !A2M2 && A2M3){
-   printf("Alarm 2 will go off once per day until it is cleared.\n");
+   else if (!A2M2 && !A2M3 && A2M4){
+   printf("Alarm 2 will go off once per day when hours and minutes match until it is cleared.\n");
    }
-   else if (!A2M1 && !A2M2 && !A2M3 && !A2DOW){
+   else if (!A2M2 && !A2M3 && !A2M4 && !A2DOW){
    printf("Alarm 2 will go off once per month until it is cleared.\n");
    }
-   else if (!A2M1 && !A2M2 && !A2M3 && A2DOW){
+   else if (!A2M2 && !A2M3 && !A2M4 && A2DOW){
    printf("Alarm 2 will go off once per week until it is cleared.\n");
    }
    else{

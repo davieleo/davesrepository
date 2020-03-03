@@ -49,14 +49,14 @@ int main(){
 
    //minutes set
    buf[8] = 0x00; //0x08 register
-   int mina = 55; //set mins for alarm 1
+   int mina = 59; //set mins for alarm 1
    buf[8] = buf[8] | DecTobcd(mina/10); //set bit 4 to 6 at 0 to 3
    buf[8] = (buf[8]<<4) | DecTobcd(mina%10); //shift left 4 bits and set the bsec 0 to 3 bits
    buf[8] = buf[8] | 0x80; //A1M2 setting high to alarm once per second 
 
    //hour set
    buf[9] = 0x00; //0x09 register
-   int houra = 12; //hour set for alarm 1
+   int houra = 17; //hour set for alarm 1
    buf[9] = buf[9] |DecTobcd(houra/10); //done without using variable
    buf[9] = buf[9]<<4 | DecTobcd(houra%10);
    buf[9] = buf[9] | 0x80; //A1M3 setting high to alarm once per second
@@ -69,7 +69,7 @@ int main(){
 
    //day set
    buf[10] = 0x00; //0x0A register
-   int daya = 6; //day set for alarm 1 1-7 for day of week, or the day of the month
+   int daya = 29; //day set for alarm 1 1-7 for day of week, or the day of the month
    buf[10] = buf[10] | DecTobcd(daya/10);
    buf[10] = buf[10]<<4 | DecTobcd(daya%10);
    buf[10] = buf[10] | 0x80; //A1M4 setting high to alarm once per second. see 0x09 register for setting this bit
@@ -80,7 +80,7 @@ int main(){
  
    //minutes set alarm 2
    buf[11] = 0x00;   //0x0B register
-   int minb = 9; //minute set for alarm 2
+   int minb = 1; //minute set for alarm 2
    buf[11] = buf[11] | DecTobcd(minb/10);
    buf[11] = buf[11]<<4 | DecTobcd(minb%10);
    buf[11] = buf[11] | 0x00; //A2M2 setting low to alarm once per hour when mins match, set to 0x80 to set high
@@ -88,7 +88,7 @@ int main(){
                            //just 4 high for once a day when hours and mins match. 
    
    buf[12] = 0x00; //0x0C register
-   int hourb = 15; //hour set for alarm 2
+   int hourb = 18; //hour set for alarm 2
    buf[12] = buf[12] | DecTobcd(hourb/10);
    buf[12] = buf[12]<<4 | DecTobcd(hourb%10);
    buf[12] = buf[12] | 0x80; //A2M3 setting high to alarm once per hour when mins match. 
@@ -99,7 +99,7 @@ int main(){
 
 
    buf[13] = 0x00;  //0x0D register
-   int dayb = 23; //day set for alarm 2
+   int dayb = 29; //day set for alarm 2
    buf[13] = buf[13] | DecTobcd(dayb/10);
    buf[13] = buf[13]<<4 | DecTobcd(dayb%10);
    buf[13] = buf[13] | 0x80; //A2M4 setting high to alarm once per hour when minutes match

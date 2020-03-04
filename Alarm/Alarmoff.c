@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<iostream>
 #include<fcntl.h>
 #include<unistd.h>  //needed this as compile giving implicit delcaration errors without
 #include<wiringPiI2C.h>
@@ -6,6 +7,7 @@
 #include<linux/i2c.h>
 #include<linux/i2c-dev.h>
 #define BUFFER_SIZE 19      //0x00 to 0x12
+using namespace std;
 
 // the time is in the registers in encoded decimal form
 int bcdToDec(char b) { return (b/16)*10 + (b%16); }
@@ -39,9 +41,12 @@ int main(){
                                   // ^(XOR) DecTobcd(1), turn off alarm 2 only use (2), turn off both and not have
                                   //square wave on INTCN, (3)
 
-   if(write(file, buf, BUFFER_SIZE)!=1){
+   if(write(file, buf, BUFFER_SIZE)!=BUFFER_SIZE){
       perror("Alarm1 and Alarm2 off\n");
       return 1;
+   } 
+   else{
+   cout << "Alarm has been turned off.\n";
    }
    close(file);
    return 0;

@@ -1,11 +1,13 @@
 #include<stdio.h>
 #include<fcntl.h>
+#include<iostream>
 #include<unistd.h>  //needed this as compile giving implicit delcaration errors without
 #include<wiringPiI2C.h>
 #include<sys/ioctl.h>
 #include<linux/i2c.h>
 #include<linux/i2c-dev.h>
 #define BUFFER_SIZE 19      //0x00 to 0x12
+using namespace std;
 
 // the time is in the registers in encoded decimal form
 int bcdToDec(char b) { return (b/16)*10 + (b%16); }
@@ -38,9 +40,12 @@ int main(){
    buf[14] = buf[14]|DecTobcd(5); // Alarm1 set. INTCN and A1IE set to 1
    buf[14] = buf[14]|DecTobcd(6); // Alarm2 set. INTCN and A2IE set to 1
 
-   if(write(file, buf, BUFFER_SIZE)!=1){
-      perror("Alarm1 and Alarm2 on\n");
+   if(write(file, buf, BUFFER_SIZE)!=BUFFER_SIZE){
+      perror("Error turning the alarm on\n");
       return 1;
+   }
+   else{
+   cout << "Alarm has been turned on.\n";
    }
    close(file);
    return 0;

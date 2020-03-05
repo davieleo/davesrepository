@@ -45,21 +45,21 @@ int main(){
    int bsec = seconda%10; //seconds remainder for bit 0 to 3
    buf[7] = buf[7] | DecTobcd(asec); //set bit 4 to 6 at 0 to 3
    buf[7] = (buf[7]<<4) | DecTobcd(bsec); //shift left 4 bits and set the bsec 0 to 3 bits
-   buf[7] = buf[7] | 0x80; //A1M1 setting high to alarm once per second
+   buf[7] = buf[7] | 0x00; //A1M1 setting low to alarm once per min. 
 
    //minutes set
    buf[8] = 0x00; //0x08 register
-   int mina = 59; //set mins for alarm 1
+   int mina = 24; //set mins for alarm 1
    buf[8] = buf[8] | DecTobcd(mina/10); //set bit 4 to 6 at 0 to 3
    buf[8] = (buf[8]<<4) | DecTobcd(mina%10); //shift left 4 bits and set the bsec 0 to 3 bits
-   buf[8] = buf[8] | 0x80; //A1M2 setting high to alarm once per second 
+   buf[8] = buf[8] | 0x80; //A1M2 setting high to alarm once per min
 
    //hour set
    buf[9] = 0x00; //0x09 register
-   int houra = 17; //hour set for alarm 1
+   int houra = 18; //hour set for alarm 1
    buf[9] = buf[9] |DecTobcd(houra/10); //done without using variable
    buf[9] = buf[9]<<4 | DecTobcd(houra%10);
-   buf[9] = buf[9] | 0x80; //A1M3 setting high to alarm once per second
+   buf[9] = buf[9] | 0x80; //A1M3 setting high to alarm once per min
                            //All A1M* bits high alarms every second, 2,3,4 high for each minute when the seconds match
                            //3,4 high for once an hour when minutes and seconds match, just 4 high for once a day when hours, mins and seconds match
    buf[9] = buf[9] | 0x00; //setting 12/24 low to set alarm to 24 hour format, change to 0x40 if 
@@ -72,7 +72,7 @@ int main(){
    int daya = 29; //day set for alarm 1 1-7 for day of week, or the day of the month
    buf[10] = buf[10] | DecTobcd(daya/10);
    buf[10] = buf[10]<<4 | DecTobcd(daya%10);
-   buf[10] = buf[10] | 0x80; //A1M4 setting high to alarm once per second. see 0x09 register for setting this bit
+   buf[10] = buf[10] | 0x80; //A1M4 setting high to alarm once per min. see 0x09 register for setting this bit
    buf[10] = buf[10] | 0x40; //setting DY/DT high to set day of the week, change to 0x00 if 
                              //day of the month is desiredAll A1M* bits need to be low to alarm 
                              //on the date (day of the month). if high it will alarm on the day of the week

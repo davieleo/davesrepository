@@ -37,16 +37,17 @@ int main(){
    
    buf[0] = DecTobcd(1);
    
-   buf[14] = buf[14]^DecTobcd(7); // Alarm1 and 2 set back to 0 from a both on state. turn off alarm 1 only use 
+   buf[14] = buf[14]^DecTobcd(4); // Alarm1 and 2 set back to 0 from a both on state. turn off alarm 1 only use 
                                   // ^(XOR) DecTobcd(1), turn off alarm 2 only use (2), turn off both and not have
                                   //square wave on INTCN, (3)
+   buf[15] = buf[15]&DecTobcd(0); //Set A1F and A2F to 0
 
    if(write(file, buf, BUFFER_SIZE)!=BUFFER_SIZE){
       perror("Alarm1 and Alarm2 off\n");
       return 1;
    } 
    else{
-   cout << "Alarm has been turned off.\n";
+   cout << "Alarm has been turned off.\n" << endl;
    }
    close(file);
    return 0;

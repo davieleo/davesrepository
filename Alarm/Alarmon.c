@@ -38,8 +38,9 @@ int main(){
    buf[0] = DecTobcd(1);
    
    buf[14] = buf[14]|DecTobcd(5); // Alarm1 set. INTCN and A1IE set to 1
-   buf[14] = buf[14]|DecTobcd(6); // Alarm2 set. INTCN and A2IE set to 1
-
+   //buf[14] = buf[14]|DecTobcd(6); // Alarm2 set. INTCN and A2IE set to 1
+   //buf[14] = buf[14]|DecTobcd(4); //set the square wave only on or off
+   buf[15] = buf[15]&DecTobcd(0);
    if(write(file, buf, BUFFER_SIZE)!=BUFFER_SIZE){
       perror("Error turning the alarm on\n");
       return 1;

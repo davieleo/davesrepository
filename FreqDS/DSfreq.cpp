@@ -29,7 +29,15 @@ char DecTobcd(char d) {return ((d/10*16) + (d%10)); }
 
 int main(int argc, char* argv[]){
    int file;
-   printf("Starting the DS3231 Alarm application\n");
+   if(argc!=2){
+      cout << "Usage is makeLED and one of: " << endl;
+      cout << "   setup, on, off, status, or close" << endl;
+      cout << " e.g. makeLED on" << endl;
+      return 2;
+   }
+   string cmd(argv[1]);
+   cout << "Starting the Freq Gen program" << endl;
+   
    if((file=open("/dev/i2c-1", O_RDWR)) < 0){
       perror("failed to open the bus\n");
    return 1;
@@ -48,65 +56,54 @@ int main(int argc, char* argv[]){
       return 1;
    }
 
-
-   if(argc!=2){
-      cout << "Please type 1Hz, 1.024kHz, " << endl;
-      cout << "4.096kHz or 8.192kHz for freq," << endl;
-      cout << " or stop to stop the program." << endl;
-      return 2;
-   }
-   string cmd(argv[1]);
-   cout << "Starting the FreqGenerator program" << endl;
-
-   if (cmd=="oHz"){
-      cout << "Setting SQW to 1Hz" << endl;
-      temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
-      buf[14] = buf[14]>>5;
-      buf[14] = buf[14]<<5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
-                            //and RS1 and RS2 are cleared also
-      buf[14] = buf[14]|temp; //put the alarm bits back  
-
-   }
-   else if (cmd=="tkHz"){
-      cout << "Setting SQW to 1.024kHz" << endl;
+   if (cmd=="1Hz"){
+  
+      cout << "Setting SQW to 1Hz." << endl;
       temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
       buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
-      buf[14] = buf[14]<<2; //Move right 2 so RS2 adn RS1 are bit0 and bit1
-      buf[14] = buf[14]|DecTobcd(1); //set RS2 "0" and RS1 "1" for 1.024kHz
-      buf[14] = buf[14]<<3; //back to original
+      buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
       buf[14] = buf[14]|temp; //Alarm bits set back
    }
-   else if (cmd=="fkHz"){
-      cout << "Setting SQW to 4.096kHz" << endl;
+
+
+   else if (cmd=="2kHz"){
+  
+      cout << "Setting SQW to 2Hz." << endl;
       temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
       buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
-      buf[14] = buf[14]<<2; //Move right 2 so RS2 adn RS1 are bit0 and bit1
-      buf[14] = buf[14]|DecTobcd(2); //set RS2 "1" and RS1 "0" for 4.096kHz
-      buf[14] = buf[14]<<3; //back to original
+      buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
+      buf[14] = buf[14]|DecTobcd(8); //set RS2 "0" and RS1 "1" for 1.024kHz
       buf[14] = buf[14]|temp; //Alarm bits set back
    }
-   else if (cmd=="ekHz"){
-      cout << "Setting SQW to 8.192kHz" << endl;
-      temp = buf[14]&DecTobcd(3); //save alarm bits in temp
-      buf[14] = buf[14]>>5; //clear the first 2 bits to make sure the if INTCN is 0 if it was a 1
+   else if (cmd=="4kHz"){
+  
+      cout << "Setting SQW to 4kHz." << endl;
+      temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
+      buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
-      buf[14] = buf[14]<<2; //Move right 2 so RS2 adn RS1 are bit0 and bit1
-      buf[14] = buf[14]|DecTobcd(3); //set RS2 "1" and RS1 "1" for 8.192kHz
-      buf[14] = buf[14]<<3; //back to original
+      buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
+      buf[14] = buf[14]|DecTobcd(16); //set RS2 "1" and RS1 "0" for 1.024kHz
       buf[14] = buf[14]|temp; //Alarm bits set back
    }
-   else if (cmd=="stop"){
-      cout << "Stopping the program" << endl;
-      buf[14] = buf[14] & 0xE3; //switch the RS1, RS2 and INTCN to 0
+
+   else if (cmd=="8kHz"){
+  
+      cout << "Setting SQW to 8kHz." << endl;
+      temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
+      buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
+                            //and RS1 and RS2 are cleared also
+      buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
+      buf[14] = buf[14]|0x18; //set RS2 "1" and RS1 "1" for 1.024kHz
+      buf[14] = buf[14]|temp; //Alarm bits set back
    }
    else{
-   cout << "Invalid command." << endl;
+      cout << "Invalid command." << endl;
    }
    
-   buf[1] = DecTobcd(1);
-   if(write(file, buf, BUFFER_SIZE)!=BUFFER){
+   buf[0] = DecTobcd(1);
+   if(write(file, buf, BUFFER_SIZE)!=BUFFER_SIZE){
       perror("Failed to write to the register\n");
       return 1;
    }

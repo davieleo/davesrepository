@@ -45,11 +45,11 @@ int main(int argc, char* argv[]){
       buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
       buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
-      buf[14] = buf[14]|DecTobcd(8); //set RS2 "0" and RS1 "1" for 1.024kHz
+      buf[14] = buf[14]|DecTobcd(24); //set RS2 "0" and RS1 "1" for 1.024kHz
       buf[14] = buf[14]|temp; //Alarm bits set back
    
-   buf[1] = DecTobcd(1);
-   if(write(file, buf, BUFFER_SIZE)!=1){
+   buf[0] = DecTobcd(1);
+   if(write(file, buf, BUFFER_SIZE)!=BUFFER_SIZE){
       perror("Failed to write to the register\n");
       return 1;
    }

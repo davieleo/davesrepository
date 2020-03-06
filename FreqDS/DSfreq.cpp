@@ -67,9 +67,9 @@ int main(int argc, char* argv[]){
    }
 
 
-   else if (cmd=="2kHz"){
+   else if (cmd=="1.024kHz"){
   
-      cout << "Setting SQW to 2Hz." << endl;
+      cout << "Setting SQW to 1.024Hz." << endl;
       temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
       buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
@@ -77,27 +77,37 @@ int main(int argc, char* argv[]){
       buf[14] = buf[14]|DecTobcd(8); //set RS2 "0" and RS1 "1" for 1.024kHz
       buf[14] = buf[14]|temp; //Alarm bits set back
    }
-   else if (cmd=="4kHz"){
+   else if (cmd=="4.096kHz"){
   
-      cout << "Setting SQW to 4kHz." << endl;
+      cout << "Setting SQW to 4.096kHz." << endl;
       temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
       buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
       buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
-      buf[14] = buf[14]|DecTobcd(16); //set RS2 "1" and RS1 "0" for 1.024kHz
+      buf[14] = buf[14]|DecTobcd(16); //set RS2 "1" and RS1 "0" for 4.096kHz
       buf[14] = buf[14]|temp; //Alarm bits set back
    }
 
-   else if (cmd=="8kHz"){
+   else if (cmd=="8.192kHz"){
   
-      cout << "Setting SQW to 8kHz." << endl;
+      cout << "Setting SQW to 8.192kHz." << endl;
       temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
       buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
                             //and RS1 and RS2 are cleared also
       buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
-      buf[14] = buf[14]|0x18; //set RS2 "1" and RS1 "1" for 1.024kHz
+      buf[14] = buf[14]|0x18; //set RS2 "1" and RS1 "1" for 8.129kHz
       buf[14] = buf[14]|temp; //Alarm bits set back
    }
+   else if (cmd=="stop"){
+      cout << "Stopping the Freq Generator program and setting interupt to Alarm state." << endl;
+      temp = buf[14]&DecTobcd(3); //save the alarm bits status in temp
+      buf[14] = buf[14]>>5; //clear the first 5 bits to make sure the if INTCN is 0 if it was a 1
+                            //and RS1 and RS2 are cleared also
+      buf[14] = buf[14]<<5; //Move right 2 so RS2 adn RS1 are bit0 and bit1
+      buf[14] = buf[14]|0x04; //Set interupt to 1 for alarm state. Turn off the Generator
+      buf[14] = buf[14]|temp; //Alarm bits set back
+   }
+
    else{
       cout << "Invalid command." << endl;
    }
@@ -109,7 +119,7 @@ int main(int argc, char* argv[]){
    }
 
    close(file);
-   cout << "Finished the makeLED Program" << endl;
+   cout << "Finished the Freq Generator Program" << endl;
    return 0;
 
 }

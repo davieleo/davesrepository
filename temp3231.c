@@ -30,8 +30,14 @@ int main(){
       perror("Failed to read in the buffer\n");
       return 1;
    }
+   int tempbuf = bcdToDec(buf[17]);
+   if (buf[17]>0x7f){       //if the MSBit is high, it is a negative number. a number minus 2 times the number is the number minused
+      tempbuf = bcdToDec(buf[17]) - (bcdToDec(buf[17]) + bcdToDec(buf[17]));
+      
+   }
+ 
    printf("The RTC Temperature is %02d.%02d\n",
-         bcdToDec(buf[17]), bcdToDec(buf[18]));
+           tempbuf, bcdToDec(buf[18]));
    close(file);
    return 0;
 }
